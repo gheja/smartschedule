@@ -1,0 +1,84 @@
+#!/bin/bash
+
+export PATH="/usr/sbin:/sbin:$PATH"
+
+_print_usage_and_exit()
+{
+	echo "$0 <start|report|quickreport>"
+	exit 1
+}
+
+if [ $# != 1 ]; then
+	_print_usage_and_exit
+fi
+
+echo "$1" | grep -Eq '^(start|report|quickreport)$'
+
+if [ $? != 0 ]; then
+	_print_usage_and_exit
+fi
+
+op="$1"
+
+
+which smartctl 2>/dev/null >/dev/null
+if [ $? != 0 ]; then
+	echo "ERROR: could not find \"smartctl\". Check that it is installed and it is in the current PATH. Exiting." >&2
+	exit 1
+fi
+
+disks=`smartctl --scan 2>/dev/null| awk '{ print $1; }' | grep -E '^/dev/'`
+
+if [ "$disks" == "" ]; then
+	echo "ERROR: could not find any disks, exiting." >&2
+	exit 1
+fi
+
+case "$op" in
+	start)
+		for i in $disks; do
+			smartctl -s on -t long $i >/dev/null 2>/dev/null
+		done
+	;;
+	
+	report)
+		for i in $disks; do
+			echo "$i"
+			smartctl -l selftest $i | grep -E '^(#|Num|No )'
+			echo ""
+		done
+		
+		echo ""
+		echo ""
+		echo ""
+		
+		for i in $disks; do
+			echo "=== $i ============================================================"
+			smartctl -x $i 2>&1
+			echo ""
+		done
+	;;
+	
+	quickreport)
+		error=0
+		
+		for i in $disks; do
+			smartctl -l selftest $i | grep -E '^#' | grep -v 'Completed without error' | wc -l | grep -Eq '^0$'
+			if [ $? != 0 ]; then
+				error=1
+			fi
+		done
+		
+		if [ $error == 1 ]; then
+			echo "2"
+		else
+			echo "1"
+		fi
+	;;
+	
+	*)
+		_print_usage_and_exit
+	;;
+esac
+
+exit 0
