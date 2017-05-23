@@ -1,0 +1,9 @@
+Package: smartschedule
+Version: __VERSION__
+Maintainer: Gabor Heja <smartschedule@dev.kakaopor.hu>
+Depends: smartmontools
+Section: utils
+Architecture: all
+Priority: optional
+Homepage: https://github.com/gheja/smartschedule
+Description: Schedule S.M.A.R.T. tests and reports
