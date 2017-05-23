@@ -45,4 +45,4 @@ chmod 644 DEBIAN/files
 chmod 644 DEBIAN/md5sums
 # chmod 755 DEBIAN/postinst
 
-fakeroot dpkg-deb --build ./ ../early-ssh_${version}.deb
+fakeroot dpkg-deb --build ./ ../smartschedule_${version}.deb
