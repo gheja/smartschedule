@@ -1,2 +1,1 @@
-1 2 * * 1 root /usr/sbin/smartschedule start
-1 8 * * 1 root /usr/sbin/smartschedule report
+59 1 * * 1 root /usr/sbin/smartschedule startslow-and-report
