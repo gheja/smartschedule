@@ -1,5 +1,6 @@
 #!/bin/bash
 
+prog="$0"
 export PATH="/usr/sbin:/sbin:$PATH"
 
 _print_usage_and_exit()
@@ -57,6 +58,38 @@ case "$op" in
 			smartctl -x $i 2>&1
 			echo ""
 		done
+	;;
+	
+	startslow)
+		for i in $disks; do
+			smartctl -s on -t long $i >/dev/null 2>/dev/null
+			
+			sleep 3
+			
+			# 24 hour max
+			j=0
+			finished=0
+			while [ $j -lt 1440 ]; do
+				smartctl -a $i | grep -Eq 'Self-test routine in progress'
+				
+				if [ $? != 0 ]; then
+					finished=1
+					break
+				fi
+				
+				sleep 60
+				i=$((i + 1))
+			done
+			
+			if [ $finished == 0 ]; then
+				echo "WARNING: Self-test on $i has not finished in 24 hours."
+			fi
+		done
+	;;
+	
+	startslow-and-report)
+		$prog startslow
+		$prog report
 	;;
 	
 	quickreport)
