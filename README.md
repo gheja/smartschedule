@@ -9,12 +9,25 @@ to create a report 6 hours later. The output of the test is directed to
 stdout so it should be received by the recipient of cron generated
 e-mails.
 
+
 ## Usage
 
 **smartschedule start**
 
 Enables the S.M.A.R.T. on all disks and starts an Extended Self Test (or
 "background long" self-test) immediately.
+
+Note: when running self-tests the performance of the disks drops,
+especially if more than one member in a RAID array is running self-test.
+See **startslow**.
+
+
+**smartschedule startslow**
+
+Enables the S.M.A.R.T. on all disks and starts an Extended Self Test (or
+"background long" self-test) one after the other. It starts on the first
+disk and waits until it finishes (with 24 hour timeout) and then proceeds
+to the next disks one by one.
 
 
 **smartschedule report**
@@ -28,6 +41,13 @@ then and the smart infos.
 Checks all disks for all the reports ran and prints the overall status,
 "1" if there were no failed self-tests for any of the disk, "2"
 otherwise.
+
+
+**smartschedule startslow-and-report**
+
+Runs a **startslow** then a **report**.
+
+This option is in the crontab.
 
 
 ## License
