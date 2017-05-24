@@ -5,7 +5,7 @@ export PATH="/usr/sbin:/sbin:$PATH"
 
 _print_usage_and_exit()
 {
-	echo "$0 <start|report|quickreport>"
+	echo "$0 <start|report|quickreport|startslow|startslow-and-report>"
 	exit 1
 }
 
@@ -13,7 +13,7 @@ if [ $# != 1 ]; then
 	_print_usage_and_exit
 fi
 
-echo "$1" | grep -Eq '^(start|report|quickreport)$'
+echo "$1" | grep -Eq '^(start|report|quickreport|startslow|startslow-and-report)$'
 
 if [ $? != 0 ]; then
 	_print_usage_and_exit
