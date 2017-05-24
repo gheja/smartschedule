@@ -78,7 +78,7 @@ case "$op" in
 				fi
 				
 				sleep 60
-				i=$((i + 1))
+				j=$((j + 1))
 			done
 			
 			if [ $finished == 0 ]; then
